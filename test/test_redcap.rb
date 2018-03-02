@@ -3,7 +3,14 @@ require 'test_helper'
 class RedcapTest < Minitest::Test
 
   def setup
+    ENV['REDCAP_HOST'] = 'https://redcap.host'
+    ENV['REDCAP_TOKEN'] = 'abcde12345'
     @redcap = Redcap.new
+  end
+
+  def teardown
+    ENV.delete 'REDCAP_HOST'
+    ENV.delete 'REDCAP_TOKEN'
   end
 
   def test_that_it_has_a_version_number

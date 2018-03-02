@@ -141,6 +141,13 @@ module Redcap
     end
     # :nocov:
 
+    # :nocov:
+    def survey_link record_id: nil, instrument: nil
+      payload = build_record_payload content: :surveyLink, record_id: record_id, instrument: instrument
+      post_without_parsing payload
+    end
+    # :nocov:
+
     private
 
     def build_payload content: nil, records: [], fields: [], filter: nil
@@ -160,6 +167,18 @@ module Redcap
     end
 
     # :nocov:
+    def build_record_payload content: nil, record_id: nil, instrument: nil
+      {
+        token: configuration.token,
+        format: configuration.format,
+        content: content,
+        instrument: instrument,
+        record: record_id
+      }
+    end
+    # :nocov:
+
+    # :nocov:
     def post payload = {}
       log "Redcap POST to #{configuration.host} with #{payload}"
       response = RestClient.post configuration.host, payload
@@ -169,6 +188,16 @@ module Redcap
       response
     end
     memoize(:post) if ENV['REDCAP_CACHE']=='ON'
+    # :nocov:
+
+    # :nocov:
+    def post_without_parsing payload = {}
+      log "Redcap POST to #{configuration.host} with #{payload}"
+      response = RestClient.post configuration.host, payload
+      log 'Response:'
+      log response
+      response
+    end
     # :nocov:
 
   end

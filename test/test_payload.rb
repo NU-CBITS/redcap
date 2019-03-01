@@ -1,10 +1,19 @@
 require 'test_helper'
 
 class PayloadTest < Minitest::Test
+  REDCAP_HOST = "https://redcap.example.com"
+  REDCAP_TOKEN = "abcd1234"
 
   def setup
+    ENV['REDCAP_HOST'] = REDCAP_HOST
+    ENV['REDCAP_TOKEN'] = REDCAP_TOKEN
     @redcap = Redcap.new
     @payload = @redcap.send(:build_payload, content: :record, records: [1,2], fields: %w(name age), filter: '[age] > 40')
+  end
+
+  def teardown
+    ENV['REDCAP_HOST'] = nil
+    ENV['REDCAP_TOKEN'] = nil
   end
 
   def test_payload_is_hash
@@ -36,5 +45,4 @@ class PayloadTest < Minitest::Test
   def test_payload_has_filter
     assert_equal @payload[:filterLogic], '[age] > 40'
   end
-
 end

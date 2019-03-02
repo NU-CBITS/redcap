@@ -1,9 +1,18 @@
 require 'test_helper'
 
 class RedcapTest < Minitest::Test
+  REDCAP_HOST = "https://redcap.example.com"
+  REDCAP_TOKEN = "abcd1234"
 
   def setup
+    ENV['REDCAP_HOST'] = REDCAP_HOST
+    ENV['REDCAP_TOKEN'] = REDCAP_TOKEN
     @redcap = Redcap.new
+  end
+
+  def teardown
+    ENV['REDCAP_HOST'] = nil
+    ENV['REDCAP_TOKEN'] = nil
   end
 
   def test_that_it_has_a_version_number
@@ -53,5 +62,4 @@ class RedcapTest < Minitest::Test
     @redcap.log = true
     assert_equal @redcap.log?, true
   end
-
 end

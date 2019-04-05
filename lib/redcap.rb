@@ -29,7 +29,9 @@ module Redcap
 
     def configure=(options)
       if options.nil?
+        # :nocov:
         @configuration = nil
+        # :nocov:
       else
         @configuration = Configuration.new(options)
       end
@@ -59,24 +61,33 @@ module Redcap
       @log ||= false
     end
 
+    # :nocov:
     def log message
       return unless @log
       @logger.debug message
     end
+    # :nocov:
 
+    # :nocov:
     def project
       payload = build_payload content: :project
       post payload
     end
+    # :nocov:
 
+    # :nocov:
     def max_id
       records(fields: %w(record_id)).map(&:values).flatten.map(&:to_i).max.to_i
     end
+    # :nocov:
 
+    # :nocov:
     def fields
       metadata.map { |m| m['field_name'].to_sym }
     end
+    # :nocov:
 
+    # :nocov:
     def metadata
       payload = {
         token: configuration.token,
@@ -86,14 +97,18 @@ module Redcap
       }
       post payload
     end
+    # :nocov:
 
+    # :nocov:
     def records records: [], fields: [], filter: nil
       # add :record_id if not included
       fields |= [:record_id] if fields.any?
       payload = build_payload content: :record, records: records, fields: fields, filter: filter
       post payload
     end
+    # :nocov:
 
+    # :nocov:
     def update data=[]
       payload = {
         token: configuration.token,
@@ -108,7 +123,9 @@ module Redcap
       result = post payload
       result['count'] == 1
     end
+    # :nocov:
 
+    # :nocov:
     def create data=[]
       payload = {
         token: configuration.token,
@@ -122,6 +139,7 @@ module Redcap
       log flush_cache if ENV['REDCAP_CACHE']=='ON'
       post payload
     end
+    # :nocov:
 
     private
 
@@ -141,6 +159,7 @@ module Redcap
       payload
     end
 
+    # :nocov:
     def post payload = {}
       log "Redcap POST to #{configuration.host} with #{payload}"
       response = RestClient.post configuration.host, payload
@@ -150,6 +169,7 @@ module Redcap
       response
     end
     memoize(:post) if ENV['REDCAP_CACHE']=='ON'
+    # :nocov:
 
   end
 
